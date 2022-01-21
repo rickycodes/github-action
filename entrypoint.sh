@@ -131,13 +131,19 @@ create_pull_request() {
 }
 
 push_to_branch() {
+  echo "push_to_branch"
   LOCALIZATION_BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
 
   REPO_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@${INPUT_GITHUB_BASE_URL}/${GITHUB_REPOSITORY}.git"
 
+  echo "${GITHUB_ACTOR}"
+
   echo "CONFIGURATION GIT USER"
   git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
   git config --global user.name "${INPUT_GITHUB_USER_NAME}"
+
+  echo "${INPUT_GITHUB_USER_EMAIL}"
+  echo "${INPUT_GITHUB_USER_NAME}"
 
   if [ ${GITHUB_REF#refs/heads/} != $GITHUB_REF ]; then
     git checkout "${GITHUB_REF#refs/heads/}"
