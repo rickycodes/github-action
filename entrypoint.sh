@@ -75,6 +75,8 @@ create_pull_request() {
     REPO_URL="https://api.${INPUT_GITHUB_BASE_URL}/repos/${GITHUB_REPOSITORY}"
   fi
 
+  echo "REPO_URL: ${REPO_URL}"
+
   PULLS_URL="${REPO_URL}/pulls"
 
   echo "CHECK IF ISSET SAME PULL REQUEST"
@@ -93,6 +95,8 @@ create_pull_request() {
 
   PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}${PULL_REQUESTS_QUERY_PARAMS}")" | jq --raw-output '.[] | .head.ref ')
 
+  echo "PULL_REQUESTS: ${PULL_REQUESTS}"
+
   if echo "$PULL_REQUESTS " | grep -q "$LOCALIZATION_BRANCH "; then
     echo "PULL REQUEST ALREADY EXIST"
   else
@@ -104,12 +108,14 @@ create_pull_request() {
 
     PULL_RESPONSE_DATA="{\"title\":\"${INPUT_PULL_REQUEST_TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\" ${BODY}}"
 
+    echo "PULL_RESPONSE_DATA: ${PULL_RESPONSE_DATA}"
+
     PULL_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${PULL_RESPONSE_DATA}" "${PULLS_URL}")
 
     set +x
     PULL_REQUESTS_URL=$(echo "${PULL_RESPONSE}" | jq '.html_url')
 
-    echo "${PULL_RESPONSE}"
+    echo "PULL_RESPONSE: ${PULL_RESPONSE}"
 
     PULL_REQUESTS_NUMBER=$(echo "${PULL_RESPONSE}" | jq '.number')
     view_debug_output
