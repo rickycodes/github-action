@@ -108,6 +108,9 @@ create_pull_request() {
 
     set +x
     PULL_REQUESTS_URL=$(echo "${PULL_RESPONSE}" | jq '.html_url')
+
+    echo "${PULL_RESPONSE}"
+
     PULL_REQUESTS_NUMBER=$(echo "${PULL_RESPONSE}" | jq '.number')
     view_debug_output
 
